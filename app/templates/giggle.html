@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Omnisearch giggle</title>
+    <link rel="stylesheet" href="{{ url_for('app.static', filename='index.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="panel">
+        <h3>Giggle search</h3>
+        <form action="{{ url_for('app.giggle_page') }}" method="post" enctype="multipart/form-data"
+              class="row" novalidate>
+            <fieldset>
+                <label for="bedfile">Upload a <code>.bed</code> or <code>.bed.gz</code> file.</label>
+                <input type="file" id="bedfile" name="bedfile" accept=".bed,.bed.gz" required>
+            </fieldset>
+            <button type="submit">Run Giggle search</button>
+        </form>
+        {% if error %}
+        <article class="contrast" style="margin-top:1rem;">
+            <strong>Error:</strong> {{ error }}
+        </article>
+        {% endif %}
+
+        {% if meta %}
+        <article style="margin-top:1rem;">
+            <h4>Run info</h4>
+            <ul>
+                <li><strong>Index dir:</strong> {{ meta.index_dir }}</li>
+                <li><strong>Storage dir:</strong> {{ meta.storage_dir }}</li>
+                <li><strong>Giggle bin:</strong> {{ meta.giggle_bin }}</li>
+                <li><strong>bgzip:</strong> {{ meta.bgzip }}</li>
+                {% if meta.chromosome %}
+                <li><strong>Chromosome:</strong> {{ meta.chromosome }}</li>
+                {% endif %}
+                {% if meta.genome_len is not none %}
+                <li><strong>-g (genome length):</strong> {{ meta.genome_len }}</li>
+                {% endif %}
+                <li><strong>Query file:</strong> {{ meta.query_basename }}</li>
+            </ul>
+        </article>
+        {% endif %}
+
+        {% if headers and rows %}
+        <section style="margin-top:1rem;">
+            <h4>Giggle results</h4>
+            <div style="overflow:auto;">
+                <table role="grid">
+                    <thead>
+                    <tr>
+                        {% for h in headers %}
+                        <th>{{ h }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in rows %}
+                    <tr>
+                        {% for c in r %}
+                        <td>{{ c }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% elif raw_output %}
+        <section style="margin-top:1rem;">
+            <h4>Giggle output</h4>
+            <pre style="white-space:pre-wrap">{{ raw_output }}</pre>
+        </section>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

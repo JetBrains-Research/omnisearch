@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+# Minimal Snakefile wiring: download + OmniPeak (for full runs), and a standalone GIGGLE index step.
+# The GIGGLE step below operates directly on existing .peak files and does not declare inputs,
+# so it won't cause downloads/OmniPeak to re-run when you target index/giggle.done explicitly.
+from utils import get_samples
+
+configfile: "config.yaml"
+
+download_dir = config.get("download_dir","downloads")
+file_format = config.get("file_format","bigWig")
+omnipeak_dir = config.get("omnipeak_dir","omnipeak")
+metadata_db = config.get("metadata_db","metadata.db")
+giggle_index_dir = config.get("giggle_index_dir","index")
+
+SAMPLES = get_samples(metadata_db)
+
+include: "rules/download.smk"
+include: "rules/omnipeak.smk"
+include: "rules/giggle.smk"
+
+rule all:
+    input:
+        # per-sample
+        expand(f"{download_dir}/{{sample}}.{file_format}",sample=SAMPLES),
+        # per-sample OmniPeak outputs
+        expand(f"{omnipeak_dir}/{{sample}}.peak",sample=SAMPLES),
+        # final GIGGLE index sentinel (the rule itself will produce gz's as needed)
+        f"{giggle_index_dir}/giggle.done"

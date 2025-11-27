@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Omnisearch data</title>
+    <link rel="stylesheet" href="{{ url_for('app.static', filename='index.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <div class="panel">
+        <h1>ENCODE File Search</h1>
+
+        <form id="searchForm" class="row" novalidate>
+          <!-- Assay -->
+          <select id="assay" title="Assay" required>
+            <option value="">Assay</option>
+            <option value="Histone ChIP-seq">Histone ChIP-seq</option>
+            <option value="TF ChIP-seq">TF ChIP-seq</option>
+          </select>
+
+          <!-- Assembly (no organism field) -->
+          <select id="assembly" title="Assembly" required>
+            <option value="">Assembly</option>
+          </select>
+
+          <!-- Target picker (floating) -->
+          <div class="picker" id="targetsPicker">
+            <button type="button" id="toggleTargets" class="btn-secondary">Target…</button>
+            <input type="hidden" id="target">
+            <span id="targetSummary" class="hint">No target selected</span>
+
+            <div id="targetsPanel" class="picker-panel" style="display:none">
+              <input id="targetFilter" class="picker-filter" placeholder="Filter targets (contains)…">
+              <div id="targetTree" class="tree"></div>
+              <div class="row small">
+                <button type="button" id="clearTargets" class="btn-secondary">Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cell types picker (floating) -->
+          <div class="picker" id="cellsPicker">
+            <button type="button" id="toggleCells" class="btn-secondary">Cell types…</button>
+            <input type="hidden" id="cell_includes_json">
+            <span id="cellSummary" class="hint">No cell types selected</span>
+
+            <div id="cellsPanel" class="picker-panel" style="display:none">
+              <input id="cellFilter" class="picker-filter" placeholder="Filter cell types (contains)…">
+              <div id="cellTree" class="tree"></div>
+              <div class="row small">
+                <button type="button" id="clearCells" class="btn-secondary">Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <input id="limit" type="number" min="1" max="200" value="25" style="width:90px" required>
+          <button id="searchBtn" type="submit">Search</button>
+        </form>
+
+        <!-- Shows while options/tree are loading; disappears when ready -->
+        <div id="optionsLoading" class="hint">Loading options…</div>
+
+        <div class="hint">
+          Columns: <strong>File</strong>, <strong>Assembly</strong>, <strong>Cell type</strong>, <strong>Target</strong>.
+        </div>
+
+        <div id="meta" class="meta"></div>
+
+        <div id="actions" class="row" style="display:none">
+          <button id="showUrlsBtn" type="button" class="btn-secondary">Show request URLs</button>
+          <button id="processBtn" type="button" class="btn-primary">Process</button>
+        </div>
+
+        <div id="loading" class="loading" style="display:none">Loading…</div>
+
+        <table id="table" style="display:none">
+          <thead>
+            <tr>
+              <th style="width:6%"><input type="checkbox" id="selectAllHeader"></th>
+              <th style="width:28%">File</th>
+              <th style="width:15%">Assembly</th>
+              <th style="width:25%">Cell type</th>
+              <th style="width:15%">Target</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- URLs modal -->
+    <div id="urlsModal" class="modal" style="display:none">
+      <div class="modal-content">
+        <div class="modal-head">
+          <strong>ENCODE request URLs</strong>
+          <div class="spacer"></div>
+          <button type="button" id="closeUrls" class="btn-secondary">Close</button>
+        </div>
+        <div class="tree">
+          <ul id="urlsList" style="margin:0; padding-left:18px;"></ul>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('app.static', filename='index.js') }}"></script>
+  </body>
+</html>

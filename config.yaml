@@ -1,0 +1,33 @@
+# project config
+logs_dir: ~/.omnisearch/logs
+
+# the ENCODE files.txt you downloaded (first line → metadata TSV URL)
+file_list: ~/.omnisearch/files.txt
+
+# Supported file format as input for Omnipeak
+file_format: bigWig
+output_types: fold change over control,raw signal,signal
+
+# Metadata storage
+metadata_tsv: ~/.omnisearch/metadata.tsv
+metadata_db: ~/.omnisearch/metadata.db
+
+# where to put downloaded .bam files
+download_dir: ~/.omnisearch/download
+
+# OmniPeak settings
+omnipeak_jar: ~/.omnisearch/omnipeak-1.3.6757.jar
+java: java
+omnipeak_params: ""      # any extra flags
+chromosome: chr15
+chromosome_sizes: ~/.omnisearch/hg19.chrom.sizes
+omnipeak_dir: ~/.omnisearch/omnipeak
+
+# bed3.gz dir
+bed3gz_dir: ~/.omnisearch/bed3gz
+bgzip_bin: bgzip
+
+# Giggle settings
+giggle_bin: ~/giggle/bin/giggle
+giggle_index_dir: ~/.omnisearch/index
+
